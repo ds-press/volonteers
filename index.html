@@ -328,6 +328,57 @@
             .back-to-top { bottom: 18px; right: 18px; width: 38px; height: 38px; }
             .puzzle-grid { max-width: 260px; }
         }
+		/* Скрываем все нативные элементы управления видео */
+		video::-webkit-media-controls {
+			display: none !important;
+		}
+		video::-webkit-media-controls-enclosure {
+			display: none !important;
+		}
+		video::-webkit-media-controls-panel {
+			display: none !important;
+		}
+		video::-webkit-media-controls-overlay-play-button {
+			display: none !important;
+		}
+		video::-webkit-media-controls-start-playback-button {
+			display: none !important;
+		}
+		video::-webkit-media-controls-timeline {
+			display: none !important;
+		}
+		video::-webkit-media-controls-current-time-display,
+		video::-webkit-media-controls-time-remaining-display {
+			display: none !important;
+		}
+		video::-webkit-media-controls-mute-button,
+		video::-webkit-media-controls-volume-slider {
+			display: none !important;
+		}
+		video::-webkit-media-controls-fullscreen-button {
+			display: none !important;
+		}
+		video::-webkit-media-controls-rewind-button,
+		video::-webkit-media-controls-return-to-realtime-button,
+		video::-webkit-media-controls-toggle-closed-captions-button {
+			display: none !important;
+		}
+
+		/* Отключаем контекстное меню (правый клик) */
+		video {
+			pointer-events: none; /* чтобы даже при наведении не появлялся курсор и меню */
+		}
+		.video-wrapper {
+			text-align: center;
+			margin: 24px 0;
+			cursor: default; /* убираем pointer при наведении на обёртку */
+		}
+		.video-caption {
+			margin-top: 8px;
+			font-size: 0.82rem;
+			color: var(--text-muted);
+			font-style: italic;
+		}
     </style>
 </head>
 <body>
@@ -379,22 +430,21 @@
             <div class="qa-answer-continuation">Детям нужно социализироваться. При социализации они быстрее развиваются.</div></div>
             <div class="qa-block"><div class="qa-question">— Что может препятствовать волонтёрской деятельности?</div><div class="qa-speaker">Оксана.</div><div class="qa-answer-continuation">Настрой человека. Самый важный ресурс для волонтёра – время. Если дети чувствуют внимание, они откликаются на заботу.</div><div class="qa-speaker" style="margin-top:8px;">Александр.</div><div class="qa-answer-continuation">Волонтёрство – это, скорее, время, чем деньги. Государство помогает материально, а время не у всех есть.</div></div>
             <div class="pull-quote">Волонтёрство – это, скорее, время, чем деньги.<span class="quote-author">— Александр Буцан</span></div>
-            <!-- Видео после цитаты -->
-			<div style="margin: 24px 0; text-align: center;">
-			    <video controls style="width: 100%; max-width: 600px; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); background: #000;">
-			        <source src="video.mp4" type="video/mp4">
-			        Ваш браузер не поддерживает воспроизведение видео.
-			    </video>
-			    <p style="margin-top: 8px; font-size: 0.82rem; color: var(--text-muted); font-style: italic;">
-			        Видео-момент от волонтёров
-			    </p>
+			<!-- Видео-вставка с автовоспроизведением при прокрутке -->
+			<div class="video-wrapper">
+				<video 
+					id="volunteerVideo"
+					src="video.mp4" 
+					muted 
+					loop 
+					playsinline 
+					preload="auto"
+					disablePictureInPicture
+					controlslist="nodownload nofullscreen noremoteplayback"
+					style="width:100%; max-width:600px; border-radius:14px; display:block; margin:0 auto; background:#000;"
+				></video>
+				<p class="video-caption">Момент волонтёрской жизни</p>
 			</div>
-			<div class="qa-block"><div class="qa-question">— Добры ли люди в обществе?</div><div class="qa-speaker">Александр.</div><div class="qa-answer-continuation">Чем крупнее общество, тем больше разобщённости. В маленьком коллективе легче обеспечить тёплые взаимоотношения.</div><div class="qa-speaker" style="margin-top:8px;">Оксана.</div><div class="qa-answer-continuation">Нас больше 200 человек! Чтобы все друг дружку поддерживали – нет, так не будет. Но главное, чтобы не обижали. Наши детки-инвалиды справляются с трудностями, но им очень больно, когда их обижают.</div></div>
-            <div class="qa-block"><div class="qa-question">— Самое запоминающееся мероприятие?</div><div class="qa-speaker">Оксана.</div><div class="qa-answer-continuation">На Яблочный Спас мы сами пекли шарлотки и продавали их прохожим, а потом раздавали деткам. Праздничная атмосфера, детки бегают, резвятся…</div>
-            <div class="photo-container reveal"><img src="4.jpg" alt="Ярмарка" class="photo-img" loading="lazy"><p class="photo-caption">Дружная команда центра «Надежда»</p></div>
-            <div class="qa-block"><div class="qa-question">— Добрая история?</div><div class="qa-speaker">Оксана.</div><div class="qa-answer-continuation">В одном кафе висела табличка: можно заплатить за кружку кофе другому человеку. Если у кого-то не будет денег, он придёт, возьмёт эту кружку и скажет спасибо. Вот у нас пока есть возможность помогать – мы помогаем. Надеюсь, те, кто примут помощь, присоединятся к добрым делам!</div>
-            <div class="photo-container reveal"><img src="5.jpg" alt="Команда" class="photo-img" loading="lazy"><p class="photo-caption">Дружная команда центра «Надежда»</p></div>
-            </div>
     </section>
 
     <!-- ═══════ ИНТЕРАКТИВНЫЙ КВИЗ (середина статьи) ═══════ -->
@@ -691,6 +741,31 @@
     loadQuizStep();
 
 })();
+	// Автовоспроизведение видео при прокрутке
+	const video = document.getElementById('volunteerVideo');
+	if (video) {
+		// Наблюдатель за видимостью
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					video.play().catch(() => {}); // игнорируем ошибки автозапуска
+				} else {
+					video.pause();
+				}
+			});
+		}, { threshold: 0.3 }); // 30% видимости для запуска
+		
+		observer.observe(video);
+		
+		// Если видео уже в зоне видимости при загрузке – запускаем
+		setTimeout(() => {
+			const rect = video.getBoundingClientRect();
+			const winHeight = window.innerHeight;
+			if (rect.top < winHeight && rect.bottom > 0) {
+				video.play().catch(() => {});
+			}
+		}, 100);
+	}
 </script>
 </body>
 </html>
