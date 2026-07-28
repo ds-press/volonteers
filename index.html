@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Путь волонтёра: от сочувствия до помощи</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf7f2;
+            --card-bg: #ffffff;
+            --text: #2d2d2d;
+            --text-muted: #5c5c5c;
+            --text-light: #7a7a7a;
+            --primary: #235b67;
+            --primary-light: #3a7d8c;
+            --accent: #c57245;
+            --accent-soft: #e8c06e;
+            --accent-light: #fdf0e3;
+            --border: #e8e2d8;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.09), 0 4px 12px rgba(0, 0, 0, 0.05);
+            --radius-sm: 8px;
+            --radius: 14px;
+            --radius-lg: 20px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --max-width: 900px;  /* чуть-чуть расширили */
+            --nav-height: 64px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: var(--nav-height);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            background-image:
+                /* нежные круги по всей ширине */
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Ccircle cx='30' cy='30' r='20' fill='none' stroke='%23c57245' stroke-width='0.6' opacity='0.08'/%3E%3Ccircle cx='30' cy='30' r='10' fill='none' stroke='%23c57245' stroke-width='0.6' opacity='0.06'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at 15% 5%, rgba(200, 180, 150, 0.08) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 30%, rgba(160, 140, 120, 0.06) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 60%, rgba(180, 160, 140, 0.05) 0%, transparent 60%);
+            background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+            background-position: 0 0, 0 0, 0 0, 0 0;
+            background-attachment: scroll, fixed, fixed, fixed;
+        }
+
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-soft), var(--primary-light));
+            z-index: 1001; border-radius: 0 2px 2px 0;
+            transition: width 0.15s linear; box-shadow: 0 0 8px rgba(197, 114, 69, 0.3);
+        }
+
+        .nav {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(250, 247, 242, 0.82); backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px); border-bottom: 1px solid var(--border);
+            height: var(--nav-height); display: flex; align-items: center;
+            transition: var(--transition); box-shadow: 0 1px 8px rgba(0,0,0,0.03);
+        }
+        .nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); background: rgba(250,247,242,0.94); }
+        .nav-inner {
+            max-width: var(--max-width); width: 100%; margin: 0 auto; padding: 0 24px;
+            display: flex; align-items: center; gap: 28px; overflow-x: auto;
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .nav-inner::-webkit-scrollbar { display: none; }
+        .nav a {
+            text-decoration: none; color: var(--text-muted); font-size: 0.875rem;
+            font-weight: 500; white-space: nowrap; position: relative; padding: 6px 0;
+            transition: color var(--transition); letter-spacing: 0.01em;
+        }
+        .nav a::after {
+            content: ''; position: absolute; bottom: -1px; left: 0; width: 0; height: 2px;
+            background: var(--accent); border-radius: 1px; transition: width var(--transition);
+        }
+        .nav a:hover, .nav a.active { color: var(--primary); }
+        .nav a.active::after { width: 100%; }
+        .nav-dot {
+            display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent-soft); margin-right: 6px; flex-shrink: 0;
+        }
+
+        .main-container {
+            max-width: var(--max-width); margin: 0 auto; padding: 0 24px 60px;
+            position: relative;
+            /* тонкие боковые линии для оформления пустого пространства */
+            box-shadow: 1px 0 0 rgba(0,0,0,0.03), -1px 0 0 rgba(0,0,0,0.03);
+        }
+
+        .hero {
+            text-align: center; padding: 56px 24px 40px; position: relative;
+        }
+        .hero-badge {
+            display: inline-block; background: var(--accent-light); color: var(--accent);
+            font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+            padding: 6px 16px; border-radius: 50px; margin-bottom: 20px;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 600; color: var(--primary);
+            line-height: 1.25; letter-spacing: -0.01em; margin-bottom: 16px;
+        }
+        .hero h1 .accent-word { color: var(--accent); position: relative; }
+        .hero h1 .accent-word::after {
+            content: ''; position: absolute; bottom: 2px; left: 0; width: 100%; height: 6px;
+            background: rgba(232,192,110,0.4); border-radius: 3px; z-index: -1;
+        }
+        .hero-subtitle {
+            font-size: 1.05rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;
+            font-weight: 400; line-height: 1.6;
+        }
+        .hero-divider { width: 60px; height: 3px; background: var(--accent-soft); margin: 24px auto 0; border-radius: 2px; }
+
+        .hero-banner {
+            width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
+            margin-bottom: 32px; overflow: hidden;
+        }
+        .hero-banner img { display: block; width: 100%; height: auto; max-height: 520px; object-fit: cover; }
+
+        .section-title {
+            font-family: 'Playfair Display', 'Georgia', serif; font-size: 1.6rem; font-weight: 600;
+            color: var(--primary); margin-bottom: 8px; letter-spacing: -0.01em;
+        }
+        .section-label {
+            font-size: 0.78rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 6px;
+        }
+
+        .interview-card {
+            background: var(--card-bg); border-radius: var(--radius-lg); padding: 36px 32px;
+            margin-bottom: 48px; box-shadow: var(--shadow-md); border: 1px solid var(--border);
+            transition: var(--transition); position: relative; overflow: hidden;
+        }
+        .interview-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: linear-gradient(180deg, var(--accent), var(--accent-soft), transparent);
+            border-radius: 2px 0 0 2px; opacity: 0.7;
+        }
+        .interview-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+        .interview-card-header { margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .interview-card-header .name {
+            font-family: 'Playfair Display', 'Georgia', serif; font-size: 1.35rem; font-weight: 600;
+            color: var(--primary); letter-spacing: -0.01em;
+        }
+        .interview-card-header .role-tag {
+            display: inline-block; font-size: 0.78rem; font-weight: 500; color: var(--accent);
+            background: var(--accent-light); padding: 3px 10px; border-radius: 50px;
+            margin-top: 4px; letter-spacing: 0.02em;
+        }
+
+        .photo-container { margin: 22px 0; text-align: center; cursor: pointer; transition: transform 0.2s ease; }
+        .photo-img {
+            max-width: 100%; height: auto; border-radius: var(--radius); box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease; display: block; margin: 0 auto;
+        }
+        .photo-container:hover .photo-img { transform: scale(1.02); box-shadow: var(--shadow-md); }
+        .photo-caption { margin-top: 8px; font-size: 0.82rem; color: var(--text-muted); font-style: italic; }
+
+        .lightbox {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center;
+            align-items: center; flex-direction: column; padding: 20px;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img { max-width: 90%; max-height: 80vh; border-radius: var(--radius-sm); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .lightbox-close {
+            position: absolute; top: 20px; right: 28px; font-size: 2.5rem; color: #fff;
+            cursor: pointer; background: none; border: none; line-height: 1; transition: color 0.2s;
+        }
+        .lightbox-close:hover { color: var(--accent-soft); }
+        .lightbox-caption { color: #eee; margin-top: 14px; font-size: 0.9rem; font-style: italic; }
+
+        .qa-block { margin-bottom: 20px; }
+        .qa-question {
+            font-weight: 600; color: var(--primary); font-size: 1rem; margin-bottom: 8px;
+            padding-left: 18px; position: relative; line-height: 1.5;
+        }
+        .qa-question::before {
+            content: ''; position: absolute; left: 0; top: 8px; width: 7px; height: 7px;
+            border-radius: 50%; background: var(--accent); opacity: 0.8;
+        }
+        .qa-speaker {
+            font-weight: 600; color: var(--accent); font-size: 0.82rem; letter-spacing: 0.03em;
+            text-transform: uppercase; margin-bottom: 2px; padding-left: 18px;
+        }
+        .qa-answer, .qa-answer-continuation { color: var(--text); font-size: 1rem; padding-left: 18px; line-height: 1.75; }
+
+        .info-box {
+            background: #f6f3ed; border-radius: var(--radius); padding: 20px 22px; margin: 20px 0;
+            border-left: 3px solid var(--primary-light); font-size: 0.88rem; color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .info-box strong { color: var(--primary); font-weight: 600; }
+        .info-box a { color: var(--primary-light); text-decoration: underline; text-underline-offset: 3px; }
+        .info-box-label {
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--primary-light); margin-bottom: 6px;
+        }
+
+        .pull-quote {
+            background: linear-gradient(135deg, var(--accent-light), #fef9f4);
+            border-radius: var(--radius); padding: 22px 26px; margin: 22px 0;
+            font-family: 'Playfair Display', 'Georgia', serif; font-style: italic;
+            font-size: 1.1rem; color: var(--primary); line-height: 1.5; position: relative;
+            border: 1px solid rgba(232,192,110,0.3);
+        }
+        .pull-quote::before {
+            content: '«'; position: absolute; top: -8px; left: 12px; font-size: 3.5rem;
+            color: rgba(197,114,69,0.2); font-style: normal; line-height: 1; pointer-events: none;
+        }
+        .pull-quote .quote-author {
+            display: block; font-style: normal; font-size: 0.8rem; font-weight: 600;
+            color: var(--accent); margin-top: 8px; font-family: 'Inter', sans-serif;
+        }
+
+        .conclusion {
+            background: var(--card-bg); border-radius: var(--radius-lg); padding: 36px 32px;
+            margin-top: 40px; box-shadow: var(--shadow-md); border: 1px solid var(--border);
+            position: relative; overflow: hidden;
+        }
+        .conclusion::after {
+            content: ''; position: absolute; bottom: 0; right: 0; width: 120px; height: 120px;
+            background: radial-gradient(circle, rgba(232,192,110,0.15) 0%, transparent 70%);
+            pointer-events: none; border-radius: 50%; transform: translate(30%, 30%);
+        }
+        .conclusion h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--primary); margin-bottom: 14px; position: relative; z-index: 1; }
+        .conclusion p { position: relative; z-index: 1; color: var(--text); font-size: 0.95rem; line-height: 1.75; margin-bottom: 10px; }
+        .highlight-sentence { font-weight: 600; color: var(--accent); font-size: 1.05rem; font-family: 'Playfair Display', serif; font-style: italic; }
+
+        .site-footer {
+            text-align: center; padding: 32px 24px; color: var(--text-light); font-size: 0.82rem;
+            border-top: 1px solid var(--border); margin-top: 40px; letter-spacing: 0.02em;
+        }
+        .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin-bottom: 10px; }
+        .footer-links a { color: var(--primary-light); text-decoration: none; font-weight: 500; transition: color var(--transition); font-size: 0.84rem; }
+        .footer-links a:hover { color: var(--accent); }
+
+        .back-to-top {
+            position: fixed; bottom: 28px; right: 28px; width: 44px; height: 44px; border-radius: 50%;
+            background: var(--primary); color: #fff; border: none; cursor: pointer; font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md);
+            opacity: 0; transform: translateY(16px); pointer-events: none; transition: all var(--transition); z-index: 999;
+        }
+        .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .back-to-top:hover { background: var(--accent); box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+
+        .reveal {
+            opacity: 0; transform: translateY(28px);
+            transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.08s; }
+        .reveal-delay-2 { transition-delay: 0.16s; }
+        .reveal-delay-3 { transition-delay: 0.24s; }
+        #puzzle-game {
+            margin-top: 60px;
+        }
+        /* ── Пазл ── */
+        .puzzle-container {
+            background: var(--card-bg); border-radius: var(--radius-lg); padding: 32px 24px;
+            margin-top: 32px; box-shadow: var(--shadow-md); border: 1px solid var(--border); text-align: center;
+        }
+        .puzzle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-width: 320px; margin: 0 auto 28px; aspect-ratio: 1/1; }
+        .puzzle-piece { background-color: var(--border); border-radius: 6px; position: relative; overflow: hidden; transition: transform 0.2s; background-size: 300px 300px; background-repeat: no-repeat; }
+        .puzzle-piece::after {
+            content: '?'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; font-weight: 700; color: rgba(255,255,255,0.9); background: rgba(45,45,45,0.6);
+            backdrop-filter: blur(2px); transition: opacity 0.4s, background 0.4s;
+        }
+        .puzzle-piece.revealed::after { opacity: 0; pointer-events: none; background: transparent; }
+        .puzzle-piece.revealed { transform: scale(1.02); }
+        .question-card { background: #f9f6f0; border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+        .question-text { font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 0.95rem; }
+        .options { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .option-btn {
+            background: white; border: 1px solid var(--border); border-radius: 50px; padding: 8px 18px;
+            font-size: 0.88rem; cursor: pointer; transition: all 0.2s; font-weight: 500; color: var(--text);
+        }
+        .option-btn:hover { background: var(--accent-light); border-color: var(--accent); }
+        .option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; pointer-events: none; }
+        .option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; animation: shake 0.3s; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+        .puzzle-message { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--primary); opacity: 0; transition: opacity 0.6s; margin-top: 8px; }
+        .puzzle-message.show { opacity: 1; }
+        .puzzle-feedback { margin-top: 8px; font-size: 0.85rem; color: var(--accent); min-height: 20px; }
+		
+        /* ── Новый квиз «Какой ты волонтёр?» ── */ 
+        .quiz-container {
+            background: var(--card-bg); border-radius: var(--radius-lg); padding: 32px 24px;
+            margin: 32px 0; box-shadow: var(--shadow-md); border: 1px solid var(--border);
+            text-align: center; position: relative;
+        }
+        .quiz-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--primary); margin-bottom: 8px; }
+        .quiz-step { margin-bottom: 24px; }
+        .quiz-question { font-weight: 600; color: var(--primary); margin-bottom: 12px; font-size: 1rem; }
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        .quiz-opt {
+            background: #f9f6f0; border: 1px solid var(--border); border-radius: 50px;
+            padding: 12px 24px; font-size: 0.92rem; cursor: pointer; transition: all 0.2s;
+            width: 100%; max-width: 400px; text-align: left; font-weight: 500; color: var(--text);
+        }
+        .quiz-opt:hover { background: var(--accent-light); border-color: var(--accent); }
+        .quiz-opt.selected { background: #e6f0f3; border-color: var(--primary); color: var(--primary); }
+        .quiz-result { display: none; margin-top: 16px; padding: 20px; background: #f6f3ed; border-radius: var(--radius); }
+        .quiz-result.show { display: block; }
+        .quiz-result h3 { color: var(--primary); margin-bottom: 6px; }
+        .quiz-result p { color: var(--text-muted); }
+
+        @media (max-width: 768px) {
+            .interview-card { padding: 24px 18px; border-radius: var(--radius); }
+            .hero { padding: 36px 16px 28px; }
+            .hero h1 { font-size: 1.7rem; }
+            .nav-inner { gap: 16px; padding: 0 14px; }
+            .qa-question, .qa-answer { padding-left: 14px; font-size: 0.9rem; }
+            .pull-quote { font-size: 0.95rem; padding: 16px 18px; }
+            .back-to-top { bottom: 18px; right: 18px; width: 38px; height: 38px; }
+            .puzzle-grid { max-width: 260px; }
+        }
+    </style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<nav class="nav" id="navbar">
+    <div class="nav-inner">
+        <a href="#hero" class="active" data-section="hero"><span class="nav-dot"></span>Начало</a>
+        <a href="#interview-1" data-section="interview-1">«Скорее, время»</a>
+        <a href="#quiz-section" data-section="quiz-section">Квиз</a>
+        <a href="#interview-2" data-section="interview-2">«Почему бы это не сделать?»</a>
+        <a href="#interview-3" data-section="interview-3">«Доброе сердце и неравнодушие»</a>
+        <a href="#conclusion" data-section="conclusion">Конец</a>
+    </div>
+</nav>
+
+<div class="main-container">
+
+    <section class="hero reveal" id="hero">
+        <span class="hero-badge">Интервью</span>
+        <h1>Путь волонтёра: <span class="accent-word">от сочувствия</span> до помощи</h1>
+        <p class="hero-subtitle">Почему помогать другим так же важно, как радовать себя? Когда сочувствие перерастает в реальную помощь? Сейчас вы познакомитесь с деятельностью нескольких волонтёров благотворительных фондов.</p>
+        <div class="hero-divider"></div>
+    </section>
+
+    <div class="hero-banner reveal reveal-delay-1">
+        <img src="Заставка.jpg" alt="Главная заставка" class="photo-img" loading="lazy">
+    </div>
+
+    <!-- Интервью 1: Буцан -->
+    <section class="reveal reveal-delay-1" id="interview-1">
+        <div class="section-label">Интервью №1</div>
+        <h2 class="section-title">Супруги Буцан — «Надежда»</h2>
+        <div class="interview-card">
+            <div class="interview-card-header">
+                <div class="name">Буцан Оксана Владимировна и Буцан Александр Анатольевич</div>
+                <span class="role-tag">Волонтёры РГООИ «Надежда»</span>
+            </div>
+            <p style="color: var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Первый разговор состоялся с супружеской парой, которая оказывает благотворительную помощь детям-инвалидам в РГООИ «Надежда».</p>
+            <div class="info-box"><div class="info-box-label">Справка</div><strong>РГООИ</strong> (Ростовская городская общественная организация инвалидов) <strong>«Надежда»</strong> основана в 1997 году для помощи семьям с детьми-инвалидами. Сайт: <a href="https://rgooi-nadezhda.ru/" target="_blank">rgooi-nadezhda.ru</a></div>
+            <div class="qa-block"><div class="qa-question">— В чём заключается ваша деятельность как волонтёров?</div><div class="qa-speaker">Оксана.</div><div class="qa-answer-continuation">Мы родители ребёнка-инвалида. Муж работает, а я с ребёнком дома. Младший занимается в центре «Надежда», мы помогаем центру в организации мероприятий, поездок.</div></div>
+            <div class="photo-container reveal"><img src="1-1.jpg" class="photo-img" loading="lazy"><p class="photo-caption">Оксана и Александр Буцан</p></div>
+            <div class="qa-block"><div class="qa-question">— Что сподвигло вас заниматься волонтёрством?</div><div class="qa-speaker">Александр.</div><div class="qa-answer-continuation">У нас была потребность в этом! У нас самих есть такой ребёнок. Получив помощь, мы так же захотели помогать другим.</div><div class="qa-speaker" style="margin-top:8px;">Оксана.</div><div class="qa-answer-continuation">Когда мы начали вливаться в эту организацию, сначала было тяжело. Самое главное – принять, что так всё получилось, надо жить дальше. Мы живём.</div></div>
+            <div class="pull-quote">Самое главное – принять, что так всё получилось, надо жить дальше. Мы живём.<span class="quote-author">— Оксана Буцан</span></div>
+			<div style="display: flex; justify-content: center; align-items: center; width: 100%;"></div>
+            <div class="qa-block"><div class="qa-question">— Какими качествами должен обладать волонтёр?</div><div class="qa-speaker">Оксана.</div><div class="qa-answer-continuation">Должно быть терпение и понимание. Дети делают многое не для того, чтобы насолить, просто они по-другому не умеют. Когда дети понимают, что ты на них не злишься, они делятся сокровенным.</div><div class="qa-answer-continuation" style="margin-top:8px;">Мы в детский лагерь часто ездим. Муж занимается с детками выжиганием. Группа занимается вместе, каждый делится достижениями.</div>
+            <div class="photo-container reveal"><img src="2.jpg" alt="Выжигание" class="photo-img" loading="lazy"><p class="photo-caption">Дружная команда центра «Надежда»</p></div>
+            <div class="qa-answer-continuation">В нашем центре трудится девочка, которая рисует на ткани с детьми – они в полном восторге! Футболки разрисовывают, целый год ходят. А самое классное, что своими руками!</div>
+            <div class="photo-container reveal"><img src="3.jpg" alt="Роспись футболок" class="photo-img" loading="lazy"><p class="photo-caption">Дружная команда центра «Надежда»</p></div>
+            <div class="qa-answer-continuation">Детям нужно социализироваться. При социализации они быстрее развиваются.</div></div>
+            <div class="qa-block"><div class="qa-question">— Что может препятствовать волонтёрской деятельности?</div><div class="qa-speaker">Оксана.</div><div class="qa-answer-continuation">Настрой человека. Самый важный ресурс для волонтёра – время. Если дети чувствуют внимание, они откликаются на заботу.</div><div class="qa-speaker" style="margin-top:8px;">Александр.</div><div class="qa-answer-continuation">Волонтёрство – это, скорее, время, чем деньги. Государство помогает материально, а время не у всех есть.</div></div>
+            <div class="pull-quote">Волонтёрство – это, скорее, время, чем деньги.<span class="quote-author">— Александр Буцан</span></div>
+            <div class="qa-block"><div class="qa-question">— Добры ли люди в обществе?</div><div class="qa-speaker">Александр.</div><div class="qa-answer-continuation">Чем крупнее общество, тем больше разобщённости. В маленьком коллективе легче обеспечить тёплые взаимоотношения.</div><div class="qa-speaker" style="margin-top:8px;">Оксана.</div><div class="qa-answer-continuation">Нас больше 200 человек! Чтобы все друг дружку поддерживали – нет, так не будет. Но главное, чтобы не обижали. Наши детки-инвалиды справляются с трудностями, но им очень больно, когда их обижают.</div></div>
+            <div class="qa-block"><div class="qa-question">— Самое запоминающееся мероприятие?</div><div class="qa-speaker">Оксана.</div><div class="qa-answer-continuation">На Яблочный Спас мы сами пекли шарлотки и продавали их прохожим, а потом раздавали деткам. Праздничная атмосфера, детки бегают, резвятся…</div>
+            <div class="photo-container reveal"><img src="4.jpg" alt="Ярмарка" class="photo-img" loading="lazy"><p class="photo-caption">Дружная команда центра «Надежда»</p></div>
+            <div class="qa-block"><div class="qa-question">— Добрая история?</div><div class="qa-speaker">Оксана.</div><div class="qa-answer-continuation">В одном кафе висела табличка: можно заплатить за кружку кофе другому человеку. Если у кого-то не будет денег, он придёт, возьмёт эту кружку и скажет спасибо. Вот у нас пока есть возможность помогать – мы помогаем. Надеюсь, те, кто примут помощь, присоединятся к добрым делам!</div>
+            <div class="photo-container reveal"><img src="5.jpg" alt="Команда" class="photo-img" loading="lazy"><p class="photo-caption">Дружная команда центра «Надежда»</p></div>
+            </div>
+    </section>
+
+    <!-- ═══════ ИНТЕРАКТИВНЫЙ КВИЗ (середина статьи) ═══════ -->
+    <section class="reveal reveal-delay-2" id="quiz-section">
+        <div class="section-label">Интерактив</div>
+        <h2 class="section-title">Какой ты волонтёр?</h2>
+        <p style="text-align:center; color: var(--text-muted); margin-bottom: 20px;">Ответь на три вопроса и узнай, чей путь тебе ближе.</p>
+        <div class="quiz-container" id="quizApp">
+            <div class="quiz-step" id="quizStep">
+                <div class="quiz-question" id="quizQ"></div>
+                <div class="quiz-options" id="quizOpts"></div>
+                <p style="margin-top:12px; font-size:0.85rem; color:var(--text-muted);" id="quizProgress"></p>
+            </div>
+            <div class="quiz-result" id="quizResult"></div>
+        </div>
+    </section>
+
+    <!-- Интервью 2: Согомонян -->
+    <section class="reveal reveal-delay-1" id="interview-2">
+        <div class="section-label">Интервью №2</div>
+        <h2 class="section-title">Михаил Согомонян — «Дарина»</h2>
+        <div class="interview-card">
+            <div class="interview-card-header"><div class="name">Согомонян Михаил Тарасович</div><span class="role-tag">Волонтёр фонда «Дарина»</span></div>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Вторая встреча состоялась с волонтёром благотворительного фонда помощи детям с онкогематологическими заболеваниями «Дарина».</p>
+            <div class="info-box"><div class="info-box-label">Справка</div>Фонд <strong>«Дарина»</strong> основан в 2012 году, помог более чем 400 детям. Сайт: <a href="https://darina-rostov.ru/" target="_blank">darina-rostov.ru</a></div>
+            <div class="qa-block"><div class="qa-question">— В чём заключается Ваша деятельность?</div><div class="qa-answer-continuation">Фотографирую детей в больницах и на соревнованиях. Фотография для меня — это эмоция в моменте.</div>
+            <div class="photo-container reveal"><img src="6.jpg" alt="Михаил" class="photo-img" loading="lazy"><p class="photo-caption">Согомонян Михаил Тарасович</p></div>
+            </div>
+            <div class="qa-block"><div class="qa-question">— Вы начали заниматься волонтёрством в переломный момент?</div><div class="qa-answer-continuation">Да, я сам раньше болел онкологическим заболеванием. Видя тёплое отношение чужих людей, я тоже решил помогать. С 2014 года активно фотографирую.</div></div>
+            <div class="info-box"><div class="info-box-label">Справка</div>Фонд <strong>«Подари жизнь»</strong> помогает детям с онкозаболеваниями. Сайт: <a href="https://podari-zhizn.ru/ru" target="_blank">podari-zhizn.ru</a></div>
+            <div class="qa-block"><div class="qa-question">— Какими качествами должен обладать волонтёр?</div><div class="qa-answer-continuation">Желание помогать бескорыстно, по зову сердца.</div></div>
+            <div class="qa-block"><div class="qa-question">— Почему люди становятся волонтёрами?</div><div class="qa-answer-continuation">Кто-то сталкивается с трудностями, как я. У кого-то появляется желание изменить мир к лучшему.</div></div>
+            <div class="qa-block"><div class="qa-question">— Что даёт волонтёрская деятельность?</div><div class="qa-answer-continuation">Душевное спокойствие, равновесие. Если я могу помочь, то почему бы не сделать? Жизнь наполняется красками.</div></div>
+            <div class="pull-quote">Если я могу помочь кому-то, то почему бы это не сделать?<span class="quote-author">— Михаил Согомонян</span></div>
+            <div class="qa-block"><div class="qa-question">— Самое запоминающееся мероприятие?</div><div class="qa-answer-continuation">«Игры победителей», которые ежегодно проводит фонд «Дарина». Там царит семейная атмосфера.</div></div>
+            <div class="qa-block"><div class="qa-question">— История, которой хочется поделиться?</div><div class="qa-answer-continuation">В Москве на международных играх мальчик-индус подарил мне две монетки своей валюты, а я ему – наши. Искреннее общение без слов!</div></div>
+            <div class="qa-block"><div class="qa-question">— Совет начинающим волонтёрам?</div><div class="qa-answer-continuation">Не бояться, что что-то не получится. Всё возможно, надо всегда к чему-то стремиться.</div></div>
+        </div>
+    </section>
+
+    <!-- Интервью 3: Пятина -->
+    <section class="reveal reveal-delay-1" id="interview-3">
+        <div class="section-label">Интервью №3</div>
+        <h2 class="section-title">Елена Пятина — координатор «Дарина»</h2>
+        <div class="interview-card">
+            <div class="interview-card-header"><div class="name">Пятина Елена Анатольевна</div><span class="role-tag">Координатор программы «Реабилитация», фонд «Дарина»</span></div>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Третий разговор состоялся с координатором программы «Реабилитация» в фонде «Дарина». Интервью брали прямо во время благотворительного мероприятия в ростовском зоопарке.</p>
+            <div class="qa-block"><div class="qa-question">— В чём заключается Ваша волонтёрская деятельность?</div><div class="qa-answer-continuation">Я стала больничным волонтёром 16 лет назад. Сейчас команда проводит занятия с детьми в онкологических отделениях Ростова.</div></div>
+            <div class="qa-block"><div class="qa-question">— Что даёт Вам волонтёрство?</div><div class="qa-answer-continuation">Радость оттого, что можешь помочь и быть наставником. Мой путь воспитал меня как личность, и теперь я передаю опыт молодёжи.</div></div>
+            <div class="qa-block"><div class="qa-question">— С чем ассоциируется волонтёрство?</div><div class="qa-answer-continuation">Взаимопомощь, доброе сердце и неравнодушие.</div></div>
+            <div class="qa-block"><div class="qa-question">— Был ли переломный момент?</div><div class="qa-answer-continuation">16 лет назад появился сайт фонда «Подари жизнь». Я начала консультироваться, как развить подобную деятельность в Ростове.</div></div>
+            <div class="qa-block"><div class="qa-question">— Какая история запомнилась больше всего?</div><div class="qa-answer-continuation">Одна девочка занималась у нас три года, потом уехала. Через пару лет я встретила её с длинными волосами. Мама рассказала, что дочка хранит все творческие работы на стене и не вспоминает о 17 курсах химиотерапии и четырёх операциях.</div>
+            <div class="photo-container reveal"><img src="7.jpg" alt="Елена Пятина" class="photo-img" loading="lazy"><p class="photo-caption">Елена Пятина</p></div>
+            </div>
+            <div class="pull-quote">Девочка не вспомнила о четырёх операциях и 17 курсах химиотерапии.<span class="quote-author">— Елена Пятина</span></div>
+        </div>
+    </section>
+
+    <!-- Заключение -->
+    <section class="reveal reveal-delay-2" id="conclusion">
+        <div class="conclusion">
+            <h2>Волонтёры играют огромную роль в обществе</h2>
+            <p>Благодаря их бескорыстной помощи эффективнее реализуются многие социальные программы и проекты. Волонтёры помогают нуждающимся и способствуют развитию общества.</p>
+            <p>Герои интервью рассказали, как они пришли к волонтёрской деятельности, поделились запоминающимися историями — например, судьбами людей, которые смогли побороть болезнь.</p>
+            <p>Благотворительная деятельность кардинально меняет жизнь людей. Она зажигает сердца, развивает чувство сопереживания. Благодаря волонтёрству у людей появляется возможность путешествовать, обретать друзей в разных городах и странах.</p>
+            <p class="highlight-sentence">Помогая другим, мы делаем этот мир лучше.</p>
+        </div>
+    </section>
+
+    <!-- Интерактив «Собери пазл» (конец) -->
+    <section class="reveal reveal-delay-3" id="puzzle-game">
+        <div class="section-label">Интерактив</div>
+        <h2 class="section-title">Собери волонтёрский пазл</h2>
+        <p style="text-align:center; color: var(--text-muted); margin-bottom: 24px;">Ответьте на вопросы о героях интервью и откройте главную цитату.</p>
+        <div class="puzzle-container">
+            <div class="puzzle-grid" id="puzzleGrid"></div>
+            <div class="question-card">
+                <div class="question-text" id="questionText">Загрузка вопроса...</div>
+                <div class="options" id="optionsContainer"></div>
+                <div class="puzzle-feedback" id="puzzleFeedback"></div>
+            </div>
+            <div class="puzzle-message" id="puzzleMessage"></div>
+        </div>
+    </section>
+</div>
+
+<footer class="site-footer">
+    <div class="footer-links">
+        <a href="https://rgooi-nadezhda.ru/" target="_blank">РГООИ «Надежда»</a>
+        <a href="https://darina-rostov.ru/" target="_blank">Фонд «Дарина»</a>
+        <a href="https://podari-zhizn.ru/ru" target="_blank">Фонд «Подари жизнь»</a>
+    </div>
+    <p>Путь волонтёра: от сочувствия до помощи &copy; 2026</p>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Наверх">&#8593;</button>
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <img src="" alt="Просмотр фото" id="lightboxImg">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<script>
+(function() {
+    const progressBar = document.getElementById('progress-bar');
+    const navbar = document.getElementById('navbar');
+    const backToTop = document.getElementById('backToTop');
+    const navLinks = document.querySelectorAll('.nav a');
+    const revealEls = document.querySelectorAll('.reveal');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    // Лайтбокс
+    document.querySelectorAll('.photo-container').forEach(c => {
+        c.addEventListener('click', function(e) {
+            const img = this.querySelector('.photo-img');
+            const cap = this.querySelector('.photo-caption');
+            if (img) {
+                lightboxImg.src = img.src;
+                lightboxCaption.textContent = cap ? cap.textContent : '';
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+    lightboxClose.addEventListener('click', () => { lightbox.classList.remove('active'); document.body.style.overflow = ''; });
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) { lightbox.classList.remove('active'); document.body.style.overflow = ''; } });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox.classList.contains('active')) { lightbox.classList.remove('active'); document.body.style.overflow = ''; } });
+
+    // Скролл-функции
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        progressBar.style.width = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) + '%' : '0%';
+    }
+    function updateNavShadow() { navbar.classList.toggle('scrolled', window.scrollY > 10); }
+    function updateBackToTop() { backToTop.classList.toggle('visible', window.scrollY > 600); }
+    function updateActiveLink() {
+        const scrollPos = window.scrollY + 120;
+        navLinks.forEach(link => {
+            const section = document.getElementById(link.getAttribute('data-section'));
+            if (section) {
+                link.classList.toggle('active', section.offsetTop <= scrollPos && section.offsetTop + section.offsetHeight > scrollPos);
+            }
+        });
+    }
+    window.addEventListener('scroll', () => {
+        requestAnimationFrame(() => { updateProgress(); updateNavShadow(); updateBackToTop(); updateActiveLink(); });
+    }, { passive: true });
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    updateProgress(); updateNavShadow(); updateBackToTop(); updateActiveLink();
+
+    // Плавный скролл для навигации
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const section = document.getElementById(this.getAttribute('data-section'));
+            if (section) {
+                e.preventDefault();
+                window.scrollTo({ top: section.offsetTop - navbar.offsetHeight - 8, behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Reveal-анимация
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+    }, { rootMargin: '0px 0px -40px 0px', threshold: 0.1 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // ══════ Пазл (конец) ══════
+    const puzzleGrid = document.getElementById('puzzleGrid');
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const puzzleFeedback = document.getElementById('puzzleFeedback');
+    const puzzleMessage = document.getElementById('puzzleMessage');
+	const puzzleSVG = "puzzle.jpg";   // ваше общее изображение сердца
+    const questions = [
+        { q: 'Как называется фонд, где занимается волонтёрством Михаил?', opts: ['«Надежда»', '«Дарина»', '«Подари жизнь»'], correct: 1 },
+        { q: 'Какое качество Оксана Буцан назвала главным?', opts: ['Смелость', 'Терпение', 'Щедрость'], correct: 1 },
+        { q: 'Сколько лет Елена Пятина в больничном волонтёрстве?', opts: ['10 лет', '12 лет', '16 лет'], correct: 2 },
+        { q: 'В каком городе Михаил начинал волонтёрство?', opts: ['Ростов-на-Дону', 'Москва', 'Таганрог'], correct: 1 },
+        { q: 'Что, по мнению Александра, важнее денег?', opts: ['Время', 'Связи', 'Образование'], correct: 0 },
+        { q: 'Как зовут волонтёра-фотографа?', opts: ['Александр Буцан', 'Михаил Согомонян', 'Елена Пятина'], correct: 1 },
+        { q: 'Какой фонд основан в Ростове в 1997 году?', opts: ['«Дарина»', '«Подари жизнь»', '«Надежда»'], correct: 2 },
+        { q: 'Какое мероприятие ежегодно проводит «Дарина»?', opts: ['Ярмарка шарлоток', 'Игры победителей', 'День здоровья'], correct: 1 },
+        { q: 'Что хранила девочка после занятий с Еленой?', opts: ['Игрушки', 'Все творческие работы', 'Фотографии'], correct: 1 }
+    ];
+    let currentQ = 0;
+    let puzzleCompleted = false;
+    function buildGrid() {
+        puzzleGrid.innerHTML = '';
+        for (let i = 0; i < 9; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'puzzle-piece';
+            piece.style.backgroundImage = `url(${puzzleSVG})`;
+            piece.style.backgroundPosition = `-${(i%3)*100}px -${Math.floor(i/3)*100}px`;
+            piece.dataset.index = i;
+            puzzleGrid.appendChild(piece);
+        }
+    }
+    function showQuestion() {
+        if (currentQ >= questions.length) { finishPuzzle(); return; }
+        const q = questions[currentQ];
+        questionText.textContent = q.q;
+        optionsContainer.innerHTML = '';
+        puzzleFeedback.textContent = '';
+        q.opts.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            btn.addEventListener('click', (e) => {
+                if (puzzleCompleted) return;
+                const allBtns = optionsContainer.querySelectorAll('.option-btn');
+                allBtns.forEach(b => b.style.pointerEvents = 'none');
+                if (idx === q.correct) {
+                    btn.classList.add('correct');
+                    puzzleFeedback.textContent = '✓ Верно!';
+                    document.querySelector(`.puzzle-piece[data-index='${currentQ}']`).classList.add('revealed');
+                    currentQ++;
+                    setTimeout(showQuestion, 600);
+                } else {
+                    btn.classList.add('wrong');
+                    puzzleFeedback.textContent = 'Неверно, попробуйте снова';
+                    setTimeout(() => { btn.classList.remove('wrong'); allBtns.forEach(b => b.style.pointerEvents = 'auto'); }, 400);
+                }
+            });
+            optionsContainer.appendChild(btn);
+        });
+    }
+    function finishPuzzle() {
+        puzzleCompleted = true;
+        questionText.textContent = 'Пазл собран!';
+        optionsContainer.innerHTML = '';
+        puzzleFeedback.textContent = '';
+        puzzleMessage.textContent = '«Помогая другим, мы делаем этот мир лучше.»';
+        puzzleMessage.classList.add('show');
+    }
+    buildGrid();
+    showQuestion();
+
+    // ══════ Квиз «Какой ты волонтёр?» (середина) ══════
+    const quizApp = document.getElementById('quizApp');
+    const quizStep = document.getElementById('quizStep');
+    const quizQ = document.getElementById('quizQ');
+    const quizOpts = document.getElementById('quizOpts');
+    const quizProgress = document.getElementById('quizProgress');
+    const quizResult = document.getElementById('quizResult');
+
+    const quizData = [
+        { q: 'Что для вас важнее в помощи другим?', opts: ['Терпение и принятие', 'Творчество и эмоции', 'Системность и наставничество'], scores: [0,1,2] },
+        { q: 'Как вы относитесь к неожиданным трудностям?', opts: ['Принимаю как часть жизни', 'Ищу в них вдохновение', 'Превращаю в план действий'], scores: [0,1,2] },
+        { q: 'Что бы вы предпочли делать в свободное время?', opts: ['Провести время с семьёй', 'Фотографировать или рисовать', 'Организовать полезное мероприятие'], scores: [0,1,2] }
+    ];
+    const results = [
+        { title: 'Путь Оксаны и Александра', text: 'Вам близка семейная, терпеливая поддержка. Вы умеете принимать людей такими, какие они есть, и дарить им своё время.' },
+        { title: 'Путь Михаила', text: 'Вы творческая натура, способная видеть красоту и дарить эмоции. Ваше волонтёрство — это искусство быть рядом.' },
+        { title: 'Путь Елены', text: 'Вы прирождённый наставник и организатор. Системный подход и многолетняя преданность делу меняют жизни.' }
+    ];
+    let quizScore = [0,0,0];
+    let quizStepIndex = 0;
+
+    function loadQuizStep() {
+        if (quizStepIndex >= quizData.length) {
+            showQuizResult();
+            return;
+        }
+        const step = quizData[quizStepIndex];
+        quizQ.textContent = step.q;
+        quizOpts.innerHTML = '';
+        quizProgress.textContent = `Вопрос ${quizStepIndex+1} из ${quizData.length}`;
+        step.opts.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-opt';
+            btn.textContent = opt;
+            btn.addEventListener('click', () => {
+                quizScore[step.scores[idx]]++;
+                quizStepIndex++;
+                loadQuizStep();
+            });
+            quizOpts.appendChild(btn);
+        });
+        quizResult.classList.remove('show');
+    }
+
+    function showQuizResult() {
+        const maxIdx = quizScore.indexOf(Math.max(...quizScore));
+        const res = results[maxIdx];
+        quizStep.style.display = 'none';
+        quizResult.innerHTML = `<h3>${res.title}</h3><p>${res.text}</p>`;
+        quizResult.classList.add('show');
+    }
+    loadQuizStep();
+
+})();
+</script>
+</body>
+</html>
